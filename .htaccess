@@ -1,0 +1,10 @@
+# Used only when the web server's document root is this whole folder (for example XAMPP htdocs\safety-store).
+# On a live server point the document root at the public/ folder instead (see SECURITY.md).
+Options -Indexes
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^$ public/ [R=302,L]
+</IfModule>
+<FilesMatch "\.(sql|md|ini|log|bak|sh|bat)$">
+Require all denied
+</FilesMatch>

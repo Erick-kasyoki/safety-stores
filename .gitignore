@@ -1,0 +1,18 @@
+# Local configuration and credentials
+/app/secrets.php
+.env
+.env.*
+!.env.example
+
+# Runtime data and private backups
+/app/chat_files/
+/public/img/uploads/**
+!/public/img/uploads/.htaccess
+*.sql.gz
+*.dump
+/safety-store-backups/
+/backups/
+
+# Logs and temporary files
+*.log
+*.tmp

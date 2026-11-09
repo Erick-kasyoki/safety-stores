@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="img/favicon.png?v=3"><link rel="shortcut icon" href="favicon.ico?v=3"><link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=3"><script>/* show /worker and /admin instead of worker.html and admin.html; changes nothing if the clean address does not work */(function(){try{var p=location.pathname;if(!/\/(worker|admin)\.html$/.test(p))return;var c=p.replace(/\.html$/,'');fetch(c,{method:'HEAD',cache:'no-store',credentials:'same-origin'}).then(function(r){var t=r.headers.get('content-type')||'';if(r.ok&&!r.redirected&&/html/.test(t))history.replaceState(null,'',c+location.search+location.hash)}).catch(function(){})}catch(e){}})();</script><title>Admin</title><link rel="stylesheet" href="style.css?v=1791872067"><link rel="stylesheet" href="theme.css?v=1791880002"><link rel="stylesheet" href="modules.css?v=10"><link rel="stylesheet" href="notify.css?v=4"><link rel="stylesheet" href="auth.css?v=2">
+<style>.bhc{max-width:720px;margin-top:28px;padding:20px;border:1px solid var(--bd);border-radius:16px;background:var(--cd)}.bhl{border:0;border-top:1px solid var(--bd);margin:12px 0}.bhg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px}.bhg label{margin:8px 0}.bhs{display:block;font-weight:600;margin-top:8px}.bhd button{margin:6px 8px 0 0;padding:6px 16px;border:1px solid var(--bd);border-radius:999px;background:var(--cd);color:var(--tx);font-weight:700}.bhd button.on{background:var(--gr);border-color:var(--gr);color:#fff}[data-theme=dark] .bhd button.on{color:#101215}.bhf{text-align:right}label{display:block;margin:8px 0;font-weight:600}input,select{display:block;width:100%;padding:10px 12px;margin-top:4px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}#gate form{max-width:360px}.hdr{display:flex;align-items:center;gap:8px;font-size:13px}.hdr b{font-weight:800}#toast{z-index:90}.logo{max-width:420px}.pwr{background:var(--so);border:1px solid var(--ye);border-radius:10px;padding:10px 12px;margin:8px 0;word-break:break-all}.pwr code{font-weight:800}.row2{display:flex;gap:8px}.row2 input{flex:1}.row2 button{margin-top:4px}.nw{white-space:nowrap}</style><script src="splash.js"></script><style id="kpcolors">/* dashboard cards + tabs: colour and overflow fix */
+.kp{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kc{min-width:0;position:relative;overflow:hidden;border:0;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.14);transition:transform .15s,box-shadow .15s}
+.kc:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.2)}
+.kc small{color:rgba(255,255,255,.88);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.kc b{font-size:clamp(15px,1.45vw,20px);overflow-wrap:break-word;word-break:normal}.kc.k-stockvalue b{white-space:nowrap}
+.kc.k-products{background:linear-gradient(135deg,#b80f1f,#ED152A)}
+.kc.k-unitsinstock{background:linear-gradient(135deg,#0891b2,#06b6d4)}
+.kc.k-stockvalue{background:linear-gradient(135deg,#059669,#10b981)}
+.kc.k-needsrestock{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.kc.k-lowstock{background:linear-gradient(135deg,#ea580c,#fb923c)}
+.kc.k-outofstock{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.kc.k-soldlastdays{background:linear-gradient(135deg,#9333ea,#c026d3)}
+.kc.good,.kc.warn,.kc.bad{box-shadow:0 4px 12px rgba(0,0,0,.14),inset 0 0 0 3px rgba(255,255,255,.55)}
+</style></head><body data-ui="colours-v3">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sp" viewBox="0 0 32 32"><path d="M16 2 4 6v9c0 7 5 12 12 15 7-3 12-8 12-15V6z" fill="#ffb81c"/><path d="m11 16 4 4 7-8" stroke="#12385f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
+<header><div class="hr"><a class="logo" href="./"><img class="sp" src="img/logo-mark.png" alt=""><span id="bn">Admin</span></a><span class="sg"></span><span class="clk" id="clk" aria-label="Current date and time"></span><span class="hdr"><button class="hi" id="hbell" hidden title="Orders" aria-label="Orders"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="bdg" id="bb" hidden></span></button><a class="stb" id="stb" href="./" hidden title="Go to the store" aria-label="Go to the store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 20v-6h4v6"/></svg><span>Store</span></a><button class="hi" id="tg" title="Light / dark" aria-label="Toggle theme"></button><span class="vr"></span><span class="uc" id="who"></span><button class="hi" id="hset" hidden title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><button class="hi" id="pwb" title="Change password" aria-label="Change password" hidden><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l3 3"/></svg></button><button class="hi" id="lgo" title="Sign out" aria-label="Sign out" hidden><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button></span><a class="bk" href="./">← Store</a></div></header>
+<main class="wrap">
+<section id="gate"><div class="gpl"><h2 id="lph">Hello, Welcome</h2><p id="lpp">Don't have an account?</p><button type="button" class="gb" id="lpb" hidden>Register</button></div><div class="gpr"><h3 id="rph">Login</h3><img class="gl" src="img/logo.png" alt=""><h2>Admin area</h2><p class="hint">For the store owner and managers. Customers use the <a href="./">store</a>.</p>
+<div class="tabs"><button class="chip on" data-g="in">Admin sign in</button><button class="chip" data-g="up" id="gup" hidden>Create admin account</button></div>
+<form id="lf2"><label>Email<input id="em" placeholder="Email" type="email" required autocomplete="username"></label><label>Password<input id="pw" placeholder="Password" type="password" required autocomplete="current-password"></label><p id="ae" role="alert"></p><button class="btn n">Sign in</button></form>
+<form id="rf2" hidden><label>Your name<input id="rn2" placeholder="Your name" required maxlength="80" autocomplete="name"></label><label>Email<input id="re2" placeholder="Email" type="email" required autocomplete="username"></label><label>Password (8+ characters)<input id="rp2" placeholder="Password (8+ characters)" type="password" minlength="8" required autocomplete="new-password"></label>
+<label id="rcw" hidden>Admin setup code<input id="rc2" placeholder="Admin setup code" autocomplete="off"></label><p class="hint" id="rh"></p><p id="ae2" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n">Create admin account</button><div class="dpw"><span class="dpv" aria-hidden="true"></span><label>Profile photo (optional)<input type="file" id="rph2" accept="image/jpeg,image/png,image/webp,image/gif"></label></div></form></div></section>
+<section id="adm" hidden>
+<div class="tabs"><button class="chip on" data-t="p">Products</button><button class="chip" data-t="i">Inventory <span class="nbd" id="nb" hidden></span></button><button class="chip" data-t="v">Invoices</button><button class="chip" data-t="o">Orders <span class="nbd" id="ob" hidden></span></button><button class="chip" data-t="w">Workers</button><button class="chip" data-t="c">Customers</button><button class="chip" data-t="a">Admins</button><button class="chip" data-t="s">Settings</button></div>
+<div id="pp"><div class="tl"><button class="btn n" id="np">+ Add product</button><button class="btn" id="imp">Import</button><button class="btn" id="exp">Export</button><button class="btn" id="bp">Change prices in bulk</button><button class="btn" id="rdp">Rename a department</button><button class="btn dgo" id="dap">Delete all products</button></div><p class="hint" id="bsn"></p><div class="ow"><table class="tb" id="pt"></table></div></div>
+<div id="ii" hidden>
+<div class="kp" id="kp"></div>
+<div class="al" id="la" hidden></div><div id="rs" hidden></div>
+<div class="tl"><label class="sr" for="is">Search inventory</label><input id="is" type="search" placeholder="Search item, SKU or department"><span class="chips2" id="if"></span><button class="btn n" id="rx">Download reorder list</button></div>
+<div class="ow"><table class="tb" id="it"></table></div>
+<h3 class="h3" id="mh">Recent stock activity</h3>
+<div class="ow"><table class="tb" id="mt"></table></div>
+</div>
+<div id="vv" hidden>
+<div class="kp" id="vk"></div>
+<div class="tl"><label class="sr" for="vq">Search invoices</label><input id="vq" type="search" placeholder="Search invoice number or customer"><span class="chips2" id="vc"></span><button class="btn n" id="vn">+ New invoice</button></div>
+<div class="ow"><table class="tb" id="vt"></table></div>
+<h3 class="h3">Repeating invoices</h3>
+<p class="hint">New invoices are created and marked as sent automatically on each date. They are created when you open this tab, or by app/cron_invoices.php if you schedule it (see the README).</p>
+<div class="ow"><table class="tb" id="vr"></table></div>
+</div>
+<div id="oo" hidden><div class="tl"><span class="chips2" id="of"></span></div><div class="ow"><table class="tb" id="ot"></table></div></div>
+<div id="ww" hidden><div class="tl"><button class="btn n" id="nw">+ Add worker</button></div>
+<p class="hint">You add workers here by name and email. Then the worker opens <b>worker.html</b> (<a href="worker.html" target="_blank">open it</a>), chooses <b>Sign up</b> and creates their own password. Only emails you add here can sign up. After that the worker signs in at worker.html and sees the orders customers place, can take an order and move it along (confirmed, dispatched, delivered), and can update stock. Workers cannot change prices, delete products, see costs or invoices, or manage other workers. Switch an account off to block it at once.</p>
+<div class="ow"><table class="tb" id="wt"></table></div></div>
+<div id="cc" hidden><div class="tl"><input id="cs" type="search" placeholder="Search customers by name, email or phone" aria-label="Search customers"></div><p class="hint">Customers sign up in the store. Here you can edit their details, set a new password, block them or delete them. Deleting a customer also deletes their orders.</p><div class="ow"><table class="tb" id="ct"></table></div></div>
+<div id="aa" hidden><div class="tl"><button class="btn n" id="na">+ Add admin</button></div><p class="hint">Admins can do everything. You cannot switch off or delete your own account, and at least one admin must always stay active.</p><div class="ow"><table class="tb" id="at"></table></div></div>
+<div id="ss" hidden><form id="sf" style="max-width:520px"><h3 class="h3">Store details</h3><p class="hint">These show on the store and on invoices. Saving here overrides config.php.</p>
+<label>Store name<input name="SITE_NAME" required maxlength="80"></label><label>Phone<input name="SITE_PHONE" maxlength="40"></label><label>Second phone (shown in Contact Us)<input name="SITE_PHONE2" maxlength="40" placeholder="+254 746 525398"></label><label>Email<input name="SITE_EMAIL" type="email" maxlength="120"></label><label>Address (shown on invoices)<input name="SITE_ADDRESS" maxlength="300"></label><label>Currency symbol<input name="CURRENCY" maxlength="8"></label><label>Shop locations on the store map<textarea name="MAP_BRANCHES" rows="5" maxlength="1500" placeholder="Main Branch | Mogadishu Road, Nairobi | -1.2833 | 36.8167" style="width:100%;font:inherit"></textarea></label><p class="hint">One shop per line: Name | Address | latitude | longitude. To get the numbers, open Google Maps, right-click the exact spot, and click the two numbers at the top of the menu to copy them. Leave empty to hide the map.</p>
+<h3 class="h3">Quotations</h3><label>Quotation number prefix<input name="QUOTE_PREFIX" maxlength="12"></label><label>Days a quotation stays valid<input name="QUOTE_VALID_DAYS" type="number" min="1" max="365"></label><label>Default terms &amp; conditions (printed on every quotation)<textarea name="QUOTE_TERMS" rows="4" maxlength="1500" placeholder="Leave empty to use the built-in terms"></textarea></label>
+<h3 class="h3">Invoices</h3><label>Invoice number prefix<input name="INVOICE_PREFIX" maxlength="12"></label><label>Tax name (VAT, GST…)<input name="TAX_NAME" maxlength="20"></label><label>Default tax %<input name="DEFAULT_TAX" type="number" step="0.01" min="0" max="100"></label><label>Days until an invoice is due<input name="DUE_DAYS" type="number" min="0" max="365"></label><label>Brand colour (like #12385f)<input name="BRAND_COLOR" maxlength="7"></label><label>Logo path or URL (like img/logo.png)<input name="LOGO" maxlength="300"></label><label>M-PESA Till number <span class="hint">(customers are asked to pay this till after their order is confirmed)</span><input name="TILL_NUMBER" inputmode="numeric" maxlength="12" placeholder="for example 123456"></label><label>How to pay (bank or mobile-money details)<textarea name="PAY_INFO" rows="3" maxlength="600"></textarea></label>
+<h3 class="h3">Order emails</h3><p class="hint">Get an email each time a customer places an order. For Gmail use host smtp.gmail.com, port 587, security TLS, your Gmail address as user and an <b>App password</b> (Google account, Security, 2-step verification, App passwords) as password.</p>
+<label>Send new orders to (separate several with commas)<input name="ORDER_EMAIL" maxlength="300" placeholder="orders@yourshop.co.ke"></label>
+<label>SMTP host<input name="SMTP_HOST" maxlength="120" placeholder="smtp.gmail.com"></label>
+<label>SMTP port<input name="SMTP_PORT" type="number" min="1" max="65535" placeholder="587"></label>
+<label>Security<select name="SMTP_SECURE"><option value="tls">TLS (port 587)</option><option value="ssl">SSL (port 465)</option><option value="none">None</option></select></label>
+<label>SMTP user (the login email)<input name="SMTP_USER" maxlength="120" autocomplete="off"></label>
+<label>SMTP password<input name="SMTP_PASS" type="password" maxlength="200" autocomplete="new-password"></label>
+<label>Send from (optional, usually the same as the user)<input name="MAIL_FROM" maxlength="120"></label>
+<p><button type="button" class="btn" id="mt">Save and send a test email</button> <span id="mtr" role="status"></span></p>
+<p id="se" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n">Save settings</button></form>
+<form id="bh" class="bhc"><h3 class="h3" style="margin-top:0">Business hours &amp; calendar targets</h3><p class="hint">Time order fulfilment only during your opening hours and working days. Nights, days off and holidays do not count.</p><hr class="bhl">
+<div class="bhg"><label>Timezone<select name="BH_TZ" id="bhtz"></select></label><label>Daily start time<input name="BH_START" type="time" required></label><label>Daily end time<input name="BH_END" type="time" required></label><label>Breach warning (%)<input name="BH_WARN" type="number" min="1" max="100" step="1" required></label></div>
+<label>Order target, in working hours <span class="hint">(0 switches the order timer off)</span><input name="BH_TARGET" type="number" min="0" max="720" step="0.5" placeholder="for example 8"></label>
+<div class="bhd" id="bhd" role="group" aria-label="Working days"><span class="bhs">Working Days</span><div><button type="button" data-d="1">Mon</button><button type="button" data-d="2">Tue</button><button type="button" data-d="3">Wed</button><button type="button" data-d="4">Thu</button><button type="button" data-d="5">Fri</button><button type="button" data-d="6">Sat</button><button type="button" data-d="7">Sun</button></div></div>
+<label>Holidays / Exempt Dates <span class="hint">(comma-separated YYYY-MM-DD)</span><input name="BH_HOLIDAYS" maxlength="2000" placeholder="2026-12-25, 2027-01-01"></label>
+<p id="bhe" role="alert" style="color:#de1c24;font-weight:600"></p><div class="bhf"><button class="btn n">Save Calendar Targets</button></div></form>
+</div>
+</section></main>
+<dialog id="wd"><form id="wf"><h2 id="wdt">Add worker</h2><input type="hidden" name="id">
+<div id="wi"><label>Full name<input name="name" required maxlength="80"></label><label>Email (they sign in with this)<input name="email" type="email" required maxlength="120"></label><label>Phone (optional)<input name="phone" maxlength="40"></label>
+<input type="hidden" name="password" id="wpw" value="">
+<p class="hint" id="wph">The worker then signs up at worker.html with this email and chooses their own password.</p>
+<p id="we" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Save</button></div>
+<div id="wr" hidden><p>Worker added. Tell them to sign up here:</p><div class="pwr">Sign up at: <code id="wr1"></code><br>Use this email: <code id="wr2"></code></div><p class="hint">They choose their own password. You never see it. If they forget it later, use Reset password.</p></div>
+<button type="button" class="lk" id="wx">Close</button></form></dialog>
+<dialog id="rd"><form id="rf3"><h2 id="rdt">Reset password</h2><input type="hidden" name="id"><p>The worker will have to choose a new password the next time they sign in.</p>
+<label>New temporary password<span class="row2"><input name="password" id="rpw" minlength="8" required autocomplete="off"><button type="button" class="xs" data-gen="rpw">Generate</button></span></label>
+<p id="rde" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Reset password</button><div id="rdr" class="pwr" hidden></div><button type="button" class="lk" id="rdx">Close</button></form></dialog>
+<dialog id="cp"><form id="cf"><h2>Change your password</h2><label>Current password<input name="current" type="password" required autocomplete="current-password"></label><label>New password (8+ characters)<input name="new" type="password" minlength="8" required autocomplete="new-password"></label>
+<p id="cpe" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Change password</button><button type="button" class="lk" id="cpx">Cancel</button></form></dialog>
+<dialog id="od" class="wide"><form id="of2"><h2 id="odt">Edit order</h2><input type="hidden" name="id">
+<div class="g2"><label>Customer name<input name="name" required maxlength="120"></label><label>Phone<input name="phone" maxlength="40"></label><label>Address<input name="address" required maxlength="300"></label><label>Payment<input name="payment" maxlength="60"></label><label>Status<select name="status"></select></label><label>Handled by<select name="assigned_to"></select></label></div>
+<label>Note<input name="note" maxlength="500"></label>
+<h3 class="h3">Items (set a quantity to 0 to remove a line; stock is adjusted for you)</h3><div class="ow"><table class="tb" id="oit"></table></div>
+<p class="vt" id="otot"></p><p id="oe" role="alert" style="color:#de1c24;font-weight:600"></p>
+<button class="btn n w">Save order</button><button type="button" class="btn w" id="odel" style="margin-top:8px">Delete order</button><button type="button" class="lk" id="ox">Cancel</button></form></dialog>
+<dialog id="ud"><form id="uf"><h2 id="udt">Edit</h2><input type="hidden" name="id"><input type="hidden" name="kind">
+<label>Full name<input name="name" required maxlength="80"></label><label>Email<input name="email" type="email" required maxlength="120"></label><label>Phone<input name="phone" maxlength="40"></label>
+<label id="upw">Password<span class="row2"><input name="password" id="upi" minlength="8" autocomplete="off" placeholder="leave empty to keep"><button type="button" class="xs" data-gen="upi">Generate</button></span></label>
+<p id="ue" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Save</button><button type="button" class="lk" id="ux">Cancel</button></form></dialog>
+<dialog id="bd"><form id="bf"><h2 id="bdt">Change prices in bulk</h2><p class="hint">Raises or lowers the selling price. Use a negative number to lower, for example -10.</p>
+<label>Department<select name="dept" id="bds"></select></label><label>Change by %<input name="percent" type="number" step="0.01" required placeholder="10"></label>
+<p id="be" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Apply</button><button type="button" class="lk" id="bx">Cancel</button></form></dialog>
+<dialog id="dd"><form id="df"><h2>Rename a department</h2><label>Department<select name="from" id="dds"></select></label><label>New name<input name="to" required maxlength="60"></label>
+<p id="de" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Rename</button><button type="button" class="lk" id="dx">Cancel</button></form></dialog>
+<div id="toast" role="status"></div>
+<dialog id="pd"><form id="pf"><h2 id="pdt">Product</h2><input type="hidden" name="id">
+<label>Name<input name="name" required></label><label>Description<input name="descr"></label>
+<label>Department<input name="dept" list="dl" required></label><datalist id="dl"></datalist>
+<label>Price<input name="price" type="number" step="0.01" min="0" required></label>
+<label>Old price (optional, shows the item as on sale)<input name="was" type="number" step="0.01" min="0"></label>
+<label>Stock<input name="stock" type="number" min="0" required></label>
+<label>Reorder level (warn when stock falls to this)<input name="reorder_level" type="number" min="0" required></label>
+<label>SKU / code (optional)<input name="sku" maxlength="40"></label>
+<label>Unit cost (optional, what you pay; used for stock value)<input name="cost" type="number" step="0.01" min="0"></label>
+<label>Emoji (shown only when the product has no photo)<input name="emoji" maxlength="8"></label>
+<div class="ph"><div class="phv" id="pv"><span>No photo</span></div><div class="pha"><button type="button" class="btn n" id="pup">Upload photo</button><input type="file" id="pfile" accept="image/jpeg,image/png,image/webp,image/gif" hidden><button type="button" class="lk" id="prm" hidden>Remove photo</button><small id="pun">JPG, PNG, WebP or GIF, up to 8 MB.</small></div></div>
+<label>Or type a photo path or web address<input name="image" id="pimage" placeholder="img/helmet.jpg"></label>
+<p id="pe" role="alert" style="color:#de1c24"></p><button class="btn n w">Save</button><button type="button" class="lk" id="px">Cancel</button></form></dialog>
+<dialog id="imd" class="wide"><h2>Import products</h2>
+<p>Choose a CSV file (in Excel: Save as, CSV). The first row must be the column names. <button type="button" class="lk" id="imt">Download a blank template</button></p>
+<input type="file" id="imf" accept=".csv,.txt,text/csv">
+<div id="imi"></div>
+<label id="imm" hidden>If a product already exists (same SKU, or same name and department)<select id="imo"><option value="upsert">Update it</option><option value="add">Add it again as a new product</option></select></label>
+<p id="ime" role="alert" style="color:#de1c24"></p>
+<button class="btn n w" id="imgo" disabled>Import</button><button type="button" class="lk" id="imx">Close</button></dialog>
+<dialog id="dad"><form id="daf"><h2>Delete all products</h2><p id="dai"></p>
+<p>Orders, invoices and stock history are kept. This cannot be undone. <button type="button" class="lk" id="dab">Download a backup (CSV) first</button></p>
+<label>Type <b>DELETE ALL</b> to confirm<input id="dac" autocomplete="off"></label>
+<p id="dae" role="alert" style="color:#de1c24"></p><button class="btn dg w" id="dag" disabled>Delete all products</button><button type="button" class="lk" id="dax">Cancel</button></form></dialog>
+<dialog id="kd"><form id="kf"><h2 id="kt">Update stock</h2><p id="ki"></p><input type="hidden" name="product_id">
+<label>What happened?<select name="kind"><option value="restock">Restock: received new stock (+)</option><option value="walkin">Sold in store (−)</option><option value="damaged">Damaged, lost or expired (−)</option><option value="adjust">Stock count: set exact amount</option></select></label>
+<label><span id="kl">Quantity</span><input name="qty" type="number" min="1" step="1" required></label>
+<p id="kp2" class="pv"></p>
+<label>Note (optional)<input name="note" maxlength="200" placeholder="Supplier, invoice no., reason…"></label>
+<p id="ke" role="alert" style="color:#de1c24"></p><button class="btn n w">Save</button><button type="button" class="lk" id="kx">Cancel</button></form></dialog>
+<dialog id="vd" class="wide"><form id="vf"><h2 id="vdt">New invoice</h2><input type="hidden" name="id">
+<div class="g2"><label>Customer name<input name="customer_name" required maxlength="120"></label><label>Email (optional)<input name="customer_email" type="email" maxlength="120"></label>
+<label>Phone (optional)<input name="customer_phone" maxlength="40"></label><label>Address (optional)<input name="customer_address" maxlength="300"></label>
+<label>Issue date<input name="issue_date" type="date" required></label><label>Due date<input name="due_date" type="date" required></label></div>
+<h3 class="h3">Items</h3>
+<div class="ow"><table class="tb" id="vi"></table></div>
+<div class="vrow"><select id="vp" aria-label="Add a product from your store"></select><button type="button" class="xs" id="vl">+ Add custom line</button></div>
+<div class="g2"><label>Discount (amount)<input name="discount" type="number" step="0.01" min="0" value="0"></label><label><span id="vtn">Tax</span> %<input name="tax_rate" type="number" step="0.01" min="0" max="100" value="0"></label></div>
+<label>Notes shown on the invoice (optional)<textarea name="notes" rows="2" maxlength="1000"></textarea></label>
+<p class="vt" id="vtot"></p>
+<fieldset id="vrep" class="rp"><label class="ck"><input type="checkbox" id="vrc"> Repeat this invoice automatically</label>
+<label id="vrf" hidden>Repeat every<select name="frequency"><option value="weekly">Week</option><option value="monthly" selected>Month</option><option value="quarterly">Quarter (3 months)</option><option value="yearly">Year</option></select></label></fieldset>
+<p id="ve" role="alert" style="color:#de1c24"></p>
+<div class="vb"><button class="btn" id="vs0" data-send="0">Save draft</button><button class="btn n" id="vs1" data-send="1">Save &amp; mark as sent</button><button type="button" class="lk" id="vx">Cancel</button></div></form></dialog>
+<dialog id="yd"><form id="yf"><h2 id="yt">Record payment</h2><p id="yi"></p><input type="hidden" name="id">
+<label>Amount received<input name="amount" type="number" step="0.01" min="0.01" required></label>
+<label>Method<select name="method" id="ym"></select></label>
+<label>Date received<input name="paid_on" type="date" required></label>
+<label>Note (optional)<input name="note" maxlength="200" placeholder="Reference, receipt no.…"></label>
+<div id="yh"></div>
+<p id="ye" role="alert" style="color:#de1c24"></p><button class="btn n w">Save payment</button><button type="button" class="lk" id="yx">Close</button></form></dialog>
+<script>
+const $=s=>document.querySelector(s),e=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let S={name:'Store',currency:'$'},P=[];
+const stat=p=>p.stock<=0?'out':p.stock<=p.reorder_level?'low':'ok',LB={out:'Out of stock',low:'Low stock',ok:'In stock'};
+const bdg=s=>`<span class="bd ${s}">${LB[s]}</span>`;
+const KD={restock:'Restock',walkin:'Sold in store',damaged:'Damaged / lost',adjust:'Stock count',sale:'Online sale',return:'Order cancelled',opening:'Opening stock'};
+let I=null,IF='all',IQ='',ME=null,WK=[],O=[],OF='open',LAST=null;
+const m=n=>S.currency+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),ST=['pending','confirmed','dispatched','delivered','cancelled'];
+async function api(a,b,x=''){
+ const r=await fetch('api.php?action='+a+x,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{});
+ const j=await r.json().catch(()=>({error:'Unexpected response from the server.'}));
+ if(!r.ok)throw new Error(j.error||'Request failed.');return j}
+async function lp(){
+ P=await api('a_products');
+ $('#dl').innerHTML=[...new Set(P.map(p=>p.dept))].map(d=>`<option value="${e(d)}">`).join('');
+ $('#pt').innerHTML='<tr><th>Item</th><th>Department</th><th>Price</th><th>Stock</th><th>Best seller</th><th></th></tr>'+P.map(p=>`<tr><td>${p.emoji} ${e(p.name)}${p.sku?`<br><small>${e(p.sku)}</small>`:''}</td><td>${e(p.dept)}</td><td>${m(p.price)}${p.was?` <s>${m(p.was)}</s>`:''}</td><td><b class="s-${stat(p)}">${p.stock}</b> ${bdg(stat(p))}</td><td><button class="xs" data-bs="${p.id}" aria-pressed="${p.best?'true':'false'}" title="Show this product in Best Sellers on the store">${p.best?'★ Best seller':'☆ Add'}</button></td><td><button class="xs" data-ed="${p.id}">Edit</button> <button class="xs" data-dl="${p.id}">Delete</button></td></tr>`).join('');
+ const nb=P.filter(p=>p.best).length;$('#bsn').innerHTML=nb?`<b>Best Sellers on the store:</b> ${nb} of 8 chosen by you (★ in the table). Changes show on the store straight away. <button class="lk" data-bsclear="1">Switch back to automatic picks</button>`:'<b>Best Sellers on the store:</b> automatic (the last 30 days’ top sellers). Press ☆ Add on up to 8 products to choose them yourself.';
+ badge()}
+const OFL=[['open','Open'],['pending','New'],['unassigned','Unassigned'],['delivered','Delivered'],['cancelled','Cancelled'],['all','All']];
+const OPENST=['pending','confirmed','dispatched'];
+function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>x.classList.remove('on'),4500)}
+async function lo(){O=await api('a_orders');if(O.length)LAST=Math.max(LAST||0,...O.map(o=>o.id));do2()}
+function do2(){
+ const n=O.filter(o=>o.status=='pending').length;$('#ob').hidden=!n;$('#ob').textContent=n;
+ $('#of').innerHTML=OFL.map(([k,l])=>`<button class="chip${OF==k?' on':''}" data-of="${k}">${l}</button>`).join('');
+ const L=O.filter(o=>OF=='all'||(OF=='open'?OPENST.includes(o.status):OF=='unassigned'?(OPENST.includes(o.status)&&!o.assigned_to):o.status==OF));
+ const act=WK.filter(w=>w.active);
+ $('#ot').innerHTML='<tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Handled by</th><th>Status</th></tr>'+(L.map(o=>{
+  const ws=[...act];if(o.assigned_to&&!act.some(w=>w.id==o.assigned_to))ws.push({id:o.assigned_to,name:(o.assigned_name||'Worker')+' (off)'});
+  return `<tr><td>#${o.id}<br>${e(o.at)}${o.sla?`<br><span class="bd ${o.sla.state=='breached'?'out':o.sla.state=='warning'?'low':'ok'}" title="Share of the order target (working hours only) already used">${o.sla.state=='breached'?'Overdue':o.sla.state=='warning'?'Due soon':'On time'} · ${o.sla.pct}%</span>`:''}</td><td>${e(o.name)}<br>${e(o.phone)}<br>${e(o.address)}${o.note?`<br><i>${e(o.note)}</i>`:''}<br>${e(o.payment)}</td><td>${o.items.map(i=>`${i.qty} × ${e(i.name)}`).join('<br>')}</td><td>${m(o.total)}${o.status=='cancelled'?'':`<br><span class="bd ${o.paid?'ok':'low'}">${o.paid?'Paid':'Awaiting payment'}</span>${o.paid&&o.paid_by_name?`<br><small>Confirmed by ${e(o.paid_by_name)}</small>`:''}${o.paid&&o.mpesa_receipt?`<br><small>M-Pesa ${e(o.mpesa_receipt)}</small>`:''}${o.status=='confirmed'?`<br><button class="xs" data-pay="${o.id}" data-pv="${o.paid?0:1}">${o.paid?'Mark unpaid':'Confirm payment'}</button>`:''}`}</td>
+  <td><select data-as="${o.id}" aria-label="Assign order ${o.id}"><option value="0">Unassigned</option>${ws.map(w=>`<option value="${w.id}"${w.id==o.assigned_to?' selected':''}>${e(w.name)}</option>`).join('')}</select>${o.updated_at?`<br><small>Updated ${e(o.updated_at)}${o.updated_by_name?' by '+e(o.updated_by_name):''}</small>`:''}</td>
+  <td><select data-st="${o.id}">${ST.map(s=>`<option${s==o.status?' selected':''}>${s}</option>`).join('')}</select>${o.status=='cancelled'?'':`<br><button class="xs" data-oi="${o.id}">Invoice</button>`}<br><button class="xs" data-oe="${o.id}">Edit</button></td></tr>`}).join('')||'<tr><td colspan="6">No orders here.</td></tr>')}
+async function lw(){WK=await api('w_list');
+ $('#wt').innerHTML='<tr><th>Worker</th><th>Contact</th><th>Status</th><th>Orders</th><th>Last sign-in</th><th></th></tr>'+(WK.map(w=>`<tr><td><b>${e(w.name)}</b><br><small>Added ${e(w.created)}</small></td><td>${e(w.email)}<br>${e(w.phone)}</td><td>${w.active?'<span class="bd ok">Active</span>':'<span class="bd out">Switched off</span>'}${w.pending?'<br><small>Waiting to sign up</small>':w.must_change?'<br><small>Has not set own password yet</small>':''}</td><td>${w.open_orders} open<br><small>${w.delivered} delivered</small></td><td>${e(w.last_login||'Never')}</td><td class="ac"><button class="xs" data-we="${w.id}">Edit</button> <button class="xs" data-wr="${w.id}">Reset password</button> <button class="xs" data-wa="${w.id}">${w.active?'Switch off':'Switch on'}</button> <button class="xs" data-wdel="${w.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No workers yet. Add your first worker.</td></tr>')}
+const gen=()=>{const a='abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint32Array(10));return [...r].map(x=>a[x%a.length]).join('')};
+async function poll(){
+ if(!ME||ME.role!='admin'||document.hidden)return;
+ try{const c=await api('a_counts');
+  if(c.currency!==undefined&&(c.currency!==S.currency||c.site_name!==S.name)){S.currency=c.currency;S.name=c.site_name;$('#bn').textContent=S.name+' admin';document.title=S.name+' admin';location.reload();return}
+  if(LAST!==null&&c.last_order>LAST){toast('New order received (#'+c.last_order+')');await lo();if(I)li().catch(()=>{})}
+  else{$('#ob').hidden=!c.pending;$('#ob').textContent=c.pending}
+ }catch(x){}}
+setInterval(poll,20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+function badge(){const n=P.filter(p=>stat(p)!='ok').length;$('#nb').hidden=!n;$('#nb').textContent=n}
+async function li(){
+ const [d,M]=await Promise.all([api('a_inventory'),api('a_movements')]);I=d;di();
+ $('#mh').textContent='Recent stock activity';mt(M)}
+function mt(M){$('#mt').innerHTML='<tr><th>When</th><th>Item</th><th>What</th><th>Change</th><th>Now</th><th>Note</th></tr>'+(M.map(x=>`<tr><td>${e(x.at)}</td><td>${e(x.name)}</td><td>${KD[x.kind]||e(x.kind)}</td><td><b class="${x.qty_change>0?'up':'dn'}">${x.qty_change>0?'+':''}${x.qty_change}</b></td><td>${x.qty_after}</td><td>${e(x.note)}</td></tr>`).join('')||'<tr><td colspan="6">No stock activity yet.</td></tr>')}
+function di(){
+ if(!I)return;const t=I.totals,n=t.low+t.out+t.soon;rs();
+ $('#kp').innerHTML=[['all','Products',t.products],['all','Units in stock',t.units],...(t.value==null?[]:[['all','Stock value',m(t.value)]]),['need','Needs restock',t.low+t.out+t.soon,(t.low+t.out+t.soon)?'warn':'good'],['low','Low stock',t.low,t.low?'warn':''],['out','Out of stock',t.out,t.out?'bad':''],['all','Sold, last 30 days',t.sold30+' units'+(t.revenue30==null?'':' · '+m(t.revenue30))]]
+  .map(([f,l,v,c])=>`<button class="kc ${c||''} k-${l.toLowerCase().replace(/[^a-z]+/g,'')}" data-f="${f}"><small>${l}</small><b>${e(v)}</b></button>`).join('');
+ $('#la').hidden=!n;$('#la').textContent=n?`${n} item${n>1?'s need':' needs'} restocking: ${t.out} out of stock, ${t.low} running low`+(t.soon?`, ${t.soon} selling fast.`:'.'):'';
+ $('#if').innerHTML=[['all','All'],['need','Needs restock'],['low','Low'],['out','Out']].map(([k,l])=>`<button class="chip${IF==k?' on':''}" data-f="${k}">${l}</button>`).join('');
+ const q=IQ.toLowerCase();
+ const L=I.items.filter(p=>(IF=='all'||(IF=='need'?p.need:p.status==IF))&&(!q||(p.name+' '+p.sku+' '+p.dept).toLowerCase().includes(q)));
+ $('#it').innerHTML='<tr><th>Item</th><th>In stock</th><th>Reorder at</th><th>Sold (30d)</th><th>Status</th><th></th></tr>'+(L.map(p=>`<tr><td>${p.emoji} ${e(p.name)}<br><small>${e(p.dept)}${p.sku?' · '+e(p.sku):''}</small></td><td><b class="s-${p.status}">${p.stock}</b></td><td><input class="ro2" type="number" min="0" value="${p.reorder_level}" data-ro="${p.id}" aria-label="Reorder level for ${e(p.name)}"></td><td>${p.sold30}</td><td>${bdg(p.status)||'<span class="bd ok">In stock</span>'}</td><td class="ac"><button class="xs" data-k="restock" data-pid="${p.id}">+ Restock</button> <button class="xs" data-k="walkin" data-pid="${p.id}">Sell</button> <button class="xs" data-k="adjust" data-pid="${p.id}">Count</button> <button class="xs" data-h="${p.id}">History</button></td></tr>`).join('')||'<tr><td colspan="6">Nothing matches.</td></tr>')}
+function kdlg(id,k){
+ const p=I.items.find(x=>x.id==id),f=$('#kf');f.reset();$('#ke').textContent='';
+ f.elements.product_id.value=id;f.elements.kind.value=k;f.dataset.cur=p.stock;
+ $('#kt').textContent=p.emoji+' '+p.name;$('#ki').textContent='Currently '+p.stock+' in stock.'+(p.status!='ok'?' Reorder level is '+p.reorder_level+'.':'');
+ kupd();$('#kd').showModal();f.elements.qty.focus()}
+function kupd(){
+ const f=$('#kf'),k=f.elements.kind.value,n=parseInt(f.elements.qty.value,10),c=+f.dataset.cur;
+ f.elements.qty.min=k=='adjust'?0:1;$('#kl').textContent=k=='adjust'?'Counted quantity on the shelf':'Quantity';
+ $('#kp2').textContent=isNaN(n)?'':'Stock will go from '+c+' to '+(k=='restock'?c+n:k=='adjust'?n:c-n)+'.'}
+
+function rs(){
+ const R=I.restock||[];$('#rs').hidden=!R.length;if(!R.length)return;
+ $('#rs').innerHTML='<h3 class="h3">What to stock now</h3><p class="hint">Worked out from your real sales over the last 30 days. Order size covers about 30 days of sales plus your safety level.</p><div class="ow"><table class="tb"><tr><th>Item</th><th>In stock</th><th>Sold (30d)</th><th>Days left</th><th>Order about</th><th>Why</th></tr>'+R.map(p=>`<tr><td>${p.emoji} ${e(p.name)}</td><td><b class="s-${p.status}">${p.stock}</b></td><td>${p.sold30}</td><td>${p.days_left==null?'–':p.days_left}</td><td><b>${p.suggest}</b></td><td><span class="bd ${p.status=='ok'?'low':p.status}">${e(p.why)}</span></td></tr>`).join('')+'</table></div>'}
+function csv(){
+ const q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'};
+ const R=I.items.filter(p=>p.need),H=['Item','SKU','Department','In stock','Reorder level','Sold (30d)','Days left','Suggested order','Unit cost','Estimated cost'];
+ const rows=[H,...R.map(p=>[p.name,p.sku,p.dept,p.stock,p.reorder_level,p.sold30,p.days_left==null?'':p.days_left,p.suggest,p.cost==null?'':p.cost.toFixed(2),p.cost==null?'':(p.cost*p.suggest).toFixed(2)])];
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}));
+ a.download='reorder-list-'+new Date().toISOString().slice(0,10)+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function init(){
+ try{
+  S=await api('site');$('#bn').textContent=S.name+' admin';document.title=S.name+' admin';
+  const sg=S.admin_signup;$('#gup').hidden=sg=='closed';$('#rcw').hidden=sg!='code';
+  $('#rh').textContent=sg=='code'?'Ask the store owner for the admin setup code.':'No admin exists yet, so the first person to sign up here becomes the admin.';
+  const r=await api('me');ME=r.user;const ok=!!(ME&&ME.role=='admin');
+  $('#gate').hidden=ok;$('#adm').hidden=!ok;$('#pwb').hidden=$('#lgo').hidden=$('#hbell').hidden=$('#hset').hidden=$('#stb').hidden=!ME;$('#who').innerHTML=ME?whoHtml(ME):'';
+  if(ME&&!ok)$('#ae').textContent='You are signed in as a '+ME.role+', not an admin. Sign out to use an admin account.';
+  if(ok){await lw();await lp();await lo();li().catch(()=>{})}
+ }catch(x){$('#ae').textContent=x.message}
+}
+function edit(p){
+ const f=$('#pf');f.reset();$('#pe').textContent='';
+ ['id','name','descr','dept','price','was','stock','reorder_level','sku','cost','emoji','image'].forEach(k=>f.elements[k].value=p?(p[k]??(k=='price'||k=='stock'?0:'')):(k=='stock'?50:k=='reorder_level'?5:k=='emoji'?'📦':''));
+ $('#pdt').textContent=p?'Edit product':'Add product';setPv(f.elements.image.value);$('#pun').textContent=UPH;$('#pd').showModal()}
+document.addEventListener('click',async ev=>{
+ const t=ev.target.closest('button');if(!t)return;
+ if(await adminClick(t))return;
+ if(t.dataset.g){const up=t.dataset.g=='up';$('#lf2').hidden=up;$('#rf2').hidden=!up;$('#gate .tabs').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c==t));return}
+ if(t.dataset.gen){$('#'+t.dataset.gen).value=gen();$('#'+t.dataset.gen).type='text';return}
+ if(t.dataset.of){OF=t.dataset.of;do2();return}
+ if(t.id=='lgo'){try{await api('logout',{})}catch(x){}location.reload();return}
+ if(t.id=='pwb'){$('#cf').reset();$('#cpe').textContent='';$('#cp').showModal();return}
+ if(t.id=='cpx'){$('#cp').close();return}
+ if(t.id=='nw'){const f=$('#wf');f.reset();f.elements.id.value='';$('#wdt').textContent='Add worker';$('#we').textContent='';$('#wi').hidden=false;$('#wr').hidden=true;$('#wpl')&&($('#wpl').hidden=true);$('#wph').hidden=false;$('#wpw').value='';$('#wd').showModal();return}
+ if(t.id=='wx'){$('#wd').close();return}
+ if(t.id=='rdx'){$('#rd').close();return}
+ if(t.dataset.we){const w=WK.find(x=>x.id==t.dataset.we),f=$('#wf');f.reset();$('#wdt').textContent='Edit worker';$('#we').textContent='';$('#wi').hidden=false;$('#wr').hidden=true;$('#wph').hidden=true;$('#wpw').value='';
+  f.elements.id.value=w.id;f.elements.name.value=w.name;f.elements.email.value=w.email;f.elements.phone.value=w.phone;$('#wd').showModal();return}
+ if(t.dataset.wr){const w=WK.find(x=>x.id==t.dataset.wr),f=$('#rf3');f.reset();f.elements.id.value=w.id;$('#rdt').textContent='Reset password: '+w.name;$('#rde').textContent='';$('#rdr').hidden=true;$('#rpw').value=gen();$('#rpw').type='text';$('#rd').showModal();return}
+ if(t.dataset.wa){const w=WK.find(x=>x.id==t.dataset.wa);if(w.active&&!confirm('Switch off '+w.name+'? They are signed out at once and cannot sign in until you switch them back on.'))return;try{await api('w_active',{id:w.id,active:!w.active});await lw();do2()}catch(x){alert(x.message)}return}
+ if(t.dataset.wdel){const w=WK.find(x=>x.id==t.dataset.wdel);if(!confirm('Delete '+w.name+'? Their orders stay but become unassigned. To keep the account but block sign-in, use Switch off instead.'))return;try{await api('w_delete',{id:w.id});await lw();await lo()}catch(x){alert(x.message)}return}
+ if(t.dataset.t){const T=t.dataset.t;for(const[k,id]of Object.entries({p:'#pp',i:'#ii',v:'#vv',o:'#oo',w:'#ww',c:'#cc',a:'#aa',s:'#ss'}))$(id).hidden=T!=k;document.querySelectorAll('.tabs .chip[data-t]').forEach(c=>c.classList.toggle('on',c==t));if(T=='o')lo();if(T=='w')lw().catch(x=>alert(x.message));if(T=='v')lv().catch(x=>alert(x.message));if(T=='i')li().catch(x=>alert(x.message));if(T=='p')lp();if(T=='c')lc().catch(x=>alert(x.message));if(T=='a')la().catch(x=>alert(x.message));if(T=='s')ls().catch(x=>alert(x.message));return}
+ if(t.dataset.f){IF=t.dataset.f;di();$('#it').scrollIntoView({block:'nearest'});return}
+ if(t.dataset.k){kdlg(t.dataset.pid,t.dataset.k);return}
+ if(t.dataset.h){try{const M=await api('a_movements',null,'&product_id='+t.dataset.h);$('#mh').textContent='Stock activity: '+(I.items.find(x=>x.id==t.dataset.h)||{}).name;mt(M);$('#mh').scrollIntoView()}catch(x){alert(x.message)}return}
+ if(t.id=='rx'){csv();return}
+ if(t.id=='kx'){$('#kd').close();return}
+ if(t.dataset.bs){try{const p=P.find(x=>x.id==t.dataset.bs);await api('a_best',{id:p.id,on:!p.best});await lp();toast(p.best?'Removed from Best Sellers':'Added to Best Sellers')}catch(x){alert(x.message)}return}
+ if(t.dataset.bsclear){if(confirm('Remove all your Best Seller picks and use automatic picks?'))try{await api('a_best_clear',{});await lp()}catch(x){alert(x.message)}return}
+ if(t.id=='np')edit(null);
+ else if(t.dataset.ed)edit(P.find(p=>p.id==t.dataset.ed));
+ else if(t.dataset.dl){if(confirm('Delete this product?'))try{await api('a_delete',{id:+t.dataset.dl});await lp();if(I)li().catch(()=>{})}catch(x){alert(x.message)}}
+ else if(t.id=='px')$('#pd').close();
+});
+document.addEventListener('change',async ev=>{
+ if(ev.target.dataset.as){try{await api('a_assign',{id:+ev.target.dataset.as,worker_id:+ev.target.value});await lo();await lw()}catch(x){alert(x.message);lo()}return}
+ const ro=ev.target.dataset.ro;
+ if(ro){try{await api('a_reorder',{id:+ro,level:+ev.target.value});await lp();await li()}catch(x){alert(x.message);li()}return}
+ if(ev.target.closest('#kf')){kupd();return}
+ const s=ev.target.dataset.st;if(!s)return;try{await api('a_status',{id:+s,status:ev.target.value});if(I)li().catch(()=>{});lp();lo();lw()}catch(x){alert(x.message);lo()}});
+$('#kf').addEventListener('input',kupd);
+$('#is').addEventListener('input',ev=>{IQ=ev.target.value;di()});
+$('#kf').onsubmit=async ev=>{ev.preventDefault();$('#ke').textContent='';try{await api('a_stock',Object.fromEntries(new FormData(ev.target)));$('#kd').close();await lp();await li()}catch(x){$('#ke').textContent=x.message}};
+$('#pf').onsubmit=async ev=>{ev.preventDefault();$('#pe').textContent='';try{await api('a_save',Object.fromEntries(new FormData(ev.target)));$('#pd').close();await lp();if(I)li().catch(()=>{})}catch(x){$('#pe').textContent=x.message}};
+$('#lf2').onsubmit=async ev=>{ev.preventDefault();$('#ae').textContent='';try{await api('staff_login',{portal:'admin',email:$('#em').value,password:$('#pw').value,remember:!!(ev.target.elements.remember&&ev.target.elements.remember.checked)});$('#pw').value='';init()}catch(x){$('#ae').textContent=x.message}};
+$('#rf2').onsubmit=async ev=>{ev.preventDefault();$('#ae2').textContent='';try{await api('admin_register',{name:$('#rn2').value,email:$('#re2').value,password:$('#rp2').value,code:$('#rc2').value,remember:!!(ev.target.elements.remember&&ev.target.elements.remember.checked)});await dpAfterSignup('#rph2');$('#rp2').value='';init()}catch(x){$('#ae2').textContent=x.message}};
+$('#wf').onsubmit=async ev=>{ev.preventDefault();$('#we').textContent='';const d=Object.fromEntries(new FormData(ev.target)),isNew=!d.id;
+ try{await api('w_save',d);await lw();do2();
+  if(isNew){$('#wi').hidden=true;$('#wr').hidden=false;$('#wdt').textContent='Worker created';$('#wr1').textContent=location.href.replace(/admin(\.html)?([?#].*)?$/,'worker.html');$('#wr2').textContent=d.email}
+  else $('#wd').close()}
+ catch(x){$('#we').textContent=x.message}};
+$('#rf3').onsubmit=async ev=>{ev.preventDefault();$('#rde').textContent='';const d=Object.fromEntries(new FormData(ev.target));
+ try{await api('w_reset',d);$('#rdr').hidden=false;$('#rdr').innerHTML='New temporary password: <code>'+e(d.password)+'</code><br><small>Give it to the worker. They will choose their own at next sign-in.</small>';await lw()}catch(x){$('#rde').textContent=x.message}};
+$('#cf').onsubmit=async ev=>{ev.preventDefault();$('#cpe').textContent='';try{await api('change_password',Object.fromEntries(new FormData(ev.target)));$('#cp').close();toast('Password changed.')}catch(x){$('#cpe').textContent=x.message}};
+// ---------- Admin extras: order editing, customers, admins, departments, bulk prices, store settings ----------
+let CU=[],AD=[],CQ='',OE=null;
+const dlg=(id,on)=>{$(id)[on?'showModal':'close']()};
+const depts=()=>[...new Set(P.map(p=>p.dept))];
+function oeTot(){let t=0;document.querySelectorAll('#oit [data-q]').forEach(q=>{const r=q.closest('tr');t+=(+q.value||0)*(+r.querySelector('[data-p]').value||0)});$('#otot').textContent='Order total: '+m(t)}
+async function openOrder(id){
+ const o=O.find(x=>x.id==id);if(!o)return;const items=await api('a_order_items',null,'&id='+id),f=$('#of2');f.reset();$('#oe').textContent='';OE={id,status:o.status};
+ f.elements.id.value=id;['name','phone','address','payment','note'].forEach(k=>f.elements[k].value=o[k]||'');
+ f.elements.status.innerHTML=ST.map(s=>`<option${s==o.status?' selected':''}>${s}</option>`).join('');
+ f.elements.assigned_to.innerHTML='<option value="0">Unassigned</option>'+WK.map(w=>`<option value="${w.id}"${w.id==o.assigned_to?' selected':''}>${e(w.name)}${w.active?'':' (off)'}</option>`).join('');
+ const lock=o.status=='cancelled';
+ $('#oit').innerHTML='<tr><th>Item</th><th>Qty</th><th>Unit price</th></tr>'+items.map(i=>`<tr data-i="${i.id}"><td>${e(i.name)}</td><td><input type="number" min="0" step="1" value="${i.qty}" data-q ${lock?'disabled':''}></td><td><input type="number" min="0" step="0.01" value="${i.unit_price.toFixed(2)}" data-p ${lock?'disabled':''}></td></tr>`).join('');
+ $('#odt').textContent='Edit order #'+id;oeTot();dlg('#od',1)}
+async function lc(){CU=await api('c_list');dc()}
+function dc(){const q=CQ.toLowerCase(),L=CU.filter(c=>!q||(c.name+' '+c.email+' '+c.phone).toLowerCase().includes(q));
+ $('#ct').innerHTML='<tr><th>Customer</th><th>Contact</th><th>Status</th><th>Orders</th><th>Last sign-in</th><th></th></tr>'+(L.map(c=>`<tr><td><b>${e(c.name)}</b><br><small>Joined ${e(c.created)}</small></td><td>${e(c.email)}<br>${e(c.phone)}</td><td>${c.active?'<span class="bd ok">Active</span>':'<span class="bd out">Blocked</span>'}</td><td>${c.orders}<br><small>${m(c.spent)}</small></td><td>${e(c.last_login||'Never')}</td><td class="ac"><button class="xs" data-ce="${c.id}">Edit</button> <button class="xs" data-ca="${c.id}">${c.active?'Block':'Unblock'}</button> <button class="xs" data-cx="${c.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No customers.</td></tr>')}
+async function la(){AD=await api('ad_list');
+ $('#at').innerHTML='<tr><th>Admin</th><th>Contact</th><th>Status</th><th>Last sign-in</th><th></th></tr>'+AD.map(a=>`<tr><td><b>${e(a.name)}</b>${a.id==ME.id?' (you)':''}<br><small>Added ${e(a.created)}</small></td><td>${e(a.email)}<br>${e(a.phone)}</td><td>${a.active?'<span class="bd ok">Active</span>':'<span class="bd out">Switched off</span>'}</td><td>${e(a.last_login||'Never')}</td><td class="ac"><button class="xs" data-ae="${a.id}">Edit</button>${a.id==ME.id?'':` <button class="xs" data-aa="${a.id}">${a.active?'Switch off':'Switch on'}</button> <button class="xs" data-ax="${a.id}">Delete</button>`}</td></tr>`).join('')}
+const BHZ=(()=>{let z=[];try{z=Intl.supportedValuesOf('timeZone')}catch(x){}if(!z.includes('Africa/Nairobi'))z=['Africa/Nairobi','Africa/Kampala','Africa/Dar_es_Salaam','Africa/Johannesburg','Africa/Lagos','Africa/Cairo','Europe/London','Asia/Dubai','America/New_York','UTC'];return z})();
+function bhTzLabel(z){try{const p=new Intl.DateTimeFormat('en',{timeZone:z,timeZoneName:'short'}).formatToParts(new Date()).find(x=>x.type=='timeZoneName');return z+(p?' ('+p.value+')':'')}catch(x){return z}}
+function bhDays(){return [...document.querySelectorAll('#bhd [data-d].on')].map(b=>b.dataset.d).join(',')}
+async function ls(){const s=await api('a_settings'),f=$('#sf');const b=$('#bh');
+ if(!b.elements.BH_TZ.options.length)b.elements.BH_TZ.innerHTML=BHZ.map(z=>`<option value="${e(z)}">${e(bhTzLabel(z))}</option>`).join('');
+ b.elements.BH_TZ.value=BHZ.includes(s.BH_TZ)?s.BH_TZ:'Africa/Nairobi';b.elements.BH_START.value=s.BH_START||'08:00';b.elements.BH_END.value=s.BH_END||'17:00';b.elements.BH_WARN.value=s.BH_WARN||'75';b.elements.BH_TARGET.value=s.BH_TARGET||'';b.elements.BH_HOLIDAYS.value=(s.BH_HOLIDAYS||'').split(',').filter(Boolean).join(', ');
+ const on=(s.BH_DAYS||'1,2,3,4,5').split(',');document.querySelectorAll('#bhd [data-d]').forEach(x=>x.classList.toggle('on',on.includes(x.dataset.d)));$('#bhe').textContent='';
+ for(const[k,v]of Object.entries(s))if(f.elements[k])f.elements[k].value=v;if(!f.elements.SMTP_SECURE.value)f.elements.SMTP_SECURE.value='tls';f.elements.SMTP_PASS.value='';f.elements.SMTP_PASS.placeholder=s.SMTP_PASS_SET?'Saved. Leave empty to keep it.':'';$('#mtr').textContent='';$('#se').textContent=''}
+function udlg(kind,u){const f=$('#uf');f.reset();$('#ue').textContent='';f.elements.kind.value=kind;f.elements.id.value=u?u.id:'';
+ if(u)['name','email','phone'].forEach(k=>f.elements[k].value=u[k]||'');
+ const pwOn=kind!='c'||!!u;$('#upw').hidden=!pwOn;f.elements.password.required=kind=='a'&&!u;f.elements.password.placeholder=u?'leave empty to keep the current one':'at least 8 characters';
+ $('#upw').firstChild.textContent=kind=='c'?'Set a new password (optional)':'Password';
+ $('#udt').textContent=(u?'Edit ':'Add ')+(kind=='c'?'customer':'admin');dlg('#ud',1)}
+async function adminClick(t){
+ try{
+  if(t.dataset.pay){await api('a_paid',{id:+t.dataset.pay,paid:t.dataset.pv=='1'});toast(t.dataset.pv=='1'?'Payment confirmed.':'Marked unpaid.');await lo();return true}
+  if(t.dataset.oe){await openOrder(t.dataset.oe);return true}
+  if(t.id=='ox'){dlg('#od',0);return true}
+  if(t.id=='odel'){if(!OE)return true;const live=OE.status!='cancelled';if(!confirm('Delete order #'+OE.id+' for good?'+(live?' Its stock will be put back on the shelf.':'')))return true;
+   await api('a_order_delete',{id:OE.id});dlg('#od',0);toast('Order deleted.');await lo();await lp();if(I)li().catch(()=>{});return true}
+  if(t.dataset.ce){udlg('c',CU.find(c=>c.id==t.dataset.ce));return true}
+  if(t.dataset.ca){const c=CU.find(x=>x.id==t.dataset.ca);if(c.active&&!confirm('Block '+c.name+'? They are signed out at once and cannot sign in.'))return true;await api('c_active',{id:c.id,active:!c.active});await lc();return true}
+  if(t.dataset.cx){const c=CU.find(x=>x.id==t.dataset.cx);if(!confirm('Delete '+c.name+'? Their '+c.orders+' order(s) are deleted too. To keep the records, use Block instead.'))return true;await api('c_delete',{id:c.id});await lc();await lo();return true}
+  if(t.id=='na'){udlg('a',null);return true}
+  if(t.dataset.ae){udlg('a',AD.find(a=>a.id==t.dataset.ae));return true}
+  if(t.dataset.aa){const a=AD.find(x=>x.id==t.dataset.aa);if(a.active&&!confirm('Switch off '+a.name+'?'))return true;await api('ad_active',{id:a.id,active:!a.active});await la();return true}
+  if(t.dataset.ax){const a=AD.find(x=>x.id==t.dataset.ax);if(!confirm('Delete admin '+a.name+'?'))return true;await api('ad_delete',{id:a.id});await la();return true}
+  if(t.id=='ux'){dlg('#ud',0);return true}
+  if(t.id=='bp'){$('#bf').reset();$('#be').textContent='';$('#bds').innerHTML='<option value="">All departments</option>'+depts().map(d=>`<option>${e(d)}</option>`).join('');dlg('#bd',1);return true}
+  if(t.id=='bx'){dlg('#bd',0);return true}
+  if(t.id=='rdp'){$('#df').reset();$('#de').textContent='';$('#dds').innerHTML=depts().map(d=>`<option>${e(d)}</option>`).join('');dlg('#dd',1);return true}
+  if(t.id=='dx'){dlg('#dd',0);return true}
+ }catch(x){alert(x.message);return true}
+ return false}
+document.addEventListener('input',ev=>{if(ev.target.closest('#oit'))oeTot();if(ev.target.id=='cs'){CQ=ev.target.value;dc()}});
+$('#of2').onsubmit=async ev=>{ev.preventDefault();$('#oe').textContent='';const f=ev.target,d=Object.fromEntries(new FormData(f));
+ d.id=+d.id;d.assigned_to=+d.assigned_to;
+ if(OE.status!='cancelled')d.items=[...document.querySelectorAll('#oit tr[data-i]')].map(r=>({id:+r.dataset.i,qty:+r.querySelector('[data-q]').value,unit_price:+r.querySelector('[data-p]').value}));
+ try{await api('a_order_save',d);dlg('#od',0);toast('Order saved.');await lo();await lp();if(I)li().catch(()=>{})}catch(x){$('#oe').textContent=x.message}};
+$('#uf').onsubmit=async ev=>{ev.preventDefault();$('#ue').textContent='';const d=Object.fromEntries(new FormData(ev.target)),c=d.kind=='c';
+ try{
+  if(c){await api('c_save',d);if(d.password)await api('c_reset',{id:d.id,password:d.password});await lc()}
+  else{await api('ad_save',d);await la()}
+  dlg('#ud',0);toast('Saved.')}catch(x){$('#ue').textContent=x.message}};
+$('#bf').onsubmit=async ev=>{ev.preventDefault();$('#be').textContent='';const d=Object.fromEntries(new FormData(ev.target));
+ if(!confirm('Change '+(d.dept||'ALL')+' prices by '+d.percent+'%?'))return;
+ try{const r=await api('a_bulk_price',d);dlg('#bd',0);toast(r.changed+' prices updated.');await lp()}catch(x){$('#be').textContent=x.message}};
+$('#df').onsubmit=async ev=>{ev.preventDefault();$('#de').textContent='';
+ try{const r=await api('a_dept_rename',Object.fromEntries(new FormData(ev.target)));dlg('#dd',0);toast(r.changed+' products moved.');await lp();if(I)li().catch(()=>{})}catch(x){$('#de').textContent=x.message}};
+$('#bhd').onclick=ev=>{const t=ev.target.closest('[data-d]');if(t)t.classList.toggle('on')};
+$('#bh').onsubmit=async ev=>{ev.preventDefault();$('#bhe').textContent='';const f=ev.target;
+ try{await api('a_settings_save',{BH_TZ:f.elements.BH_TZ.value,BH_START:f.elements.BH_START.value,BH_END:f.elements.BH_END.value,BH_WARN:f.elements.BH_WARN.value,BH_TARGET:f.elements.BH_TARGET.value.trim(),BH_DAYS:bhDays(),BH_HOLIDAYS:f.elements.BH_HOLIDAYS.value});toast('Calendar targets saved.');await lo()}catch(x){$('#bhe').textContent=x.message}};
+$('#sf').onsubmit=async ev=>{ev.preventDefault();$('#se').textContent='';
+ try{const was=S.currency+'|'+S.name;await api('a_settings_save',Object.fromEntries(new FormData(ev.target)));S=await api('site');$('#bn').textContent=S.name+' admin';document.title=S.name+' admin';
+  if(S.currency+'|'+S.name!==was){toast('Settings saved. Refreshing prices…');setTimeout(()=>location.reload(),700)}else toast('Settings saved.')}catch(x){$('#se').textContent=x.message}};
+
+// ---- product photos, import, export, delete all ----
+const UPH='JPG, PNG, WebP or GIF, up to 8 MB.';
+function setPv(v){const b=$('#pv');v=(v||'').trim();$('#prm').hidden=!v;
+ if(!v){b.innerHTML='<span>No photo</span>';return}
+ b.innerHTML='';const i=new Image();i.alt='';i.onerror=()=>{b.innerHTML='<span>Photo not found</span>'};i.src=v;b.append(i)}
+$('#pup').onclick=()=>$('#pfile').click();
+$('#pfile').onchange=async ev=>{
+ const f=ev.target.files[0];ev.target.value='';if(!f)return;$('#pe').textContent='';
+ if(!/^image\/(jpeg|png|webp|gif)$/.test(f.type)){$('#pe').textContent='Use a JPG, PNG, WebP or GIF photo.';return}
+ if(f.size>8*1024*1024){$('#pe').textContent='The photo is bigger than 8 MB.';return}
+ const b=$('#pup');b.disabled=true;$('#pun').textContent='Uploading…';
+ try{
+  const fd=new FormData();fd.append('photo',f);
+  const r=await fetch('api.php?action=a_upload',{method:'POST',headers:{'X-Requested-With':'fetch'},body:fd});
+  const j=await r.json().catch(()=>({error:'Unexpected response from the server.'}));
+  if(!r.ok)throw new Error(j.error||'Upload failed.');
+  $('#pimage').value=j.path;setPv(j.path);$('#pun').textContent='Photo uploaded. Press Save to keep it.';
+ }catch(x){$('#pun').textContent=UPH;$('#pe').textContent=x.message}
+ b.disabled=false};
+$('#pimage').addEventListener('input',()=>setPv($('#pimage').value));
+$('#prm').onclick=()=>{$('#pimage').value='';setPv('');$('#pun').textContent=UPH};
+
+function dlFile(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function exportProducts(){
+ try{
+  const r=await fetch('api.php?action=a_export');
+  if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.error||'Export failed.')}
+  dlFile('products-'+new Date().toISOString().slice(0,10)+'.csv',await r.blob());toast('Products exported.');
+ }catch(x){alert(x.message)}}
+$('#exp').onclick=exportProducts;
+
+function parseCSV(t){
+ t=t.replace(/^\ufeff/,'');
+ const first=t.split(/\r?\n/,1)[0],d=[',',';','\t'].map(c=>[c,first.split(c).length]).sort((a,b)=>b[1]-a[1])[0][0];
+ const R=[];let r=[],c='',q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];
+  if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch=='"'&&c==='')q=true;
+  else if(ch==d){r.push(c);c=''}
+  else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;r.push(c);c='';R.push(r);r=[]}
+  else c+=ch}
+ if(c!==''||r.length){r.push(c);R.push(r)}
+ return R.filter(x=>x.some(v=>v.trim()!==''))}
+const AL={name:['name','product','product name','item','item name','title'],descr:['description','descr','details'],dept:['department','dept','category'],price:['price','selling price','unit price'],was:['old price','was','compare at price'],stock:['stock','quantity','qty','in stock'],reorder_level:['reorder level','reorder','reorder at'],sku:['sku','code','product code'],cost:['unit cost','cost','buying price'],emoji:['emoji','icon'],image:['image','photo','picture','image url','photo path','image path']};
+const nk=h=>String(h).toLowerCase().replace(/[_\-]+/g,' ').replace(/\s+/g,' ').trim();
+function mapRows(R){
+ const col={},unk=[];
+ R[0].forEach((h,i)=>{const k=Object.keys(AL).find(k=>AL[k].includes(nk(h)));if(k&&!(k in col))col[k]=i;else if(String(h).trim())unk.push(String(h).trim())});
+ return{col,unk,rows:R.slice(1).map(r=>{const o={};for(const k in col)o[k]=String(r[col[k]]??'').trim();return o})}}
+let IMP=null;
+function imReset(){IMP=null;$('#imf').value='';$('#imi').innerHTML='';$('#imm').hidden=true;$('#ime').textContent='';$('#imgo').disabled=true;$('#imgo').textContent='Import'}
+$('#imp').onclick=()=>{imReset();$('#imd').showModal()};
+$('#imx').onclick=()=>$('#imd').close();
+$('#imt').onclick=()=>dlFile('products-template.csv',new Blob(['\ufeffname,description,department,price,old_price,stock,reorder_level,sku,unit_cost,emoji,image\r\nSafety Helmet (Yellow),Hard hat with adjustable harness,Head & Face,12.00,15.00,40,5,HLM-YEL,7.50,⛑️,img/helmet-yellow.jpg\r\n'],{type:'text/csv'}));
+$('#imf').onchange=async ev=>{
+ const f=ev.target.files[0];if(!f)return;$('#ime').textContent='';$('#imi').innerHTML='';$('#imm').hidden=true;$('#imgo').disabled=true;IMP=null;
+ try{
+  if(f.size>8*1024*1024)throw new Error('That file is too big (8 MB max).');
+  const R=parseCSV(await f.text());
+  if(R.length<2)throw new Error('The file has no product rows. The first row must be the column names.');
+  const M=mapRows(R),NM={name:'name',dept:'department',price:'price'},miss=['name','dept','price'].filter(k=>!(k in M.col));
+  if(miss.length)throw new Error('Missing column'+(miss.length>1?'s':'')+': '+miss.map(k=>NM[k]).join(', ')+'. Download the blank template to see the columns.');
+  if(M.rows.length>5000)throw new Error('Up to 5000 products per import. Split the file in parts.');
+  IMP=M.rows;const n=M.rows.length;
+  $('#imi').innerHTML=`<p><b>${n}</b> product${n==1?'':'s'} found.${M.unk.length?` Ignored columns: ${e(M.unk.join(', '))}.`:''}</p><div class="ow"><table class="tb"><tr><th>Name</th><th>Department</th><th>Price</th><th>Stock</th></tr>${M.rows.slice(0,5).map(r=>`<tr><td>${e(r.name)}</td><td>${e(r.dept)}</td><td>${e(r.price)}</td><td>${e(r.stock??'')}</td></tr>`).join('')}</table></div>${n>5?`<p>…and ${n-5} more.</p>`:''}`;
+  $('#imm').hidden=false;$('#imgo').disabled=false;$('#imgo').textContent='Import '+n+' product'+(n==1?'':'s');
+ }catch(x){$('#ime').textContent=x.message}};
+$('#imgo').onclick=async()=>{
+ if(!IMP)return;const b=$('#imgo');b.disabled=true;b.textContent='Importing…';$('#ime').textContent='';
+ try{
+  const r=await api('a_import',{rows:IMP,mode:$('#imo').value});IMP=null;
+  $('#imi').innerHTML=`<p><b>Done.</b> Added ${r.added}, updated ${r.updated}${r.skipped?`, skipped ${r.skipped}`:''}.</p>`+(r.errors.length?`<ul class="ie">${r.errors.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`:'');
+  $('#imm').hidden=true;$('#imf').value='';b.textContent='Import';
+  await lp();if(I)li().catch(()=>{});
+ }catch(x){$('#ime').textContent=x.message;b.disabled=false;b.textContent='Try again'}};
+
+$('#dap').onclick=()=>{$('#dai').textContent=P.length?`This permanently deletes all ${P.length} product${P.length==1?'':'s'} from the store.`:'There are no products to delete.';$('#dac').value='';$('#dag').disabled=true;$('#dae').textContent='';$('#dad').showModal()};
+$('#dac').oninput=()=>{$('#dag').disabled=$('#dac').value.trim()!=='DELETE ALL'||!P.length};
+$('#dab').onclick=exportProducts;
+$('#dax').onclick=()=>$('#dad').close();
+$('#daf').onsubmit=async ev=>{ev.preventDefault();$('#dae').textContent='';
+ try{const r=await api('a_delete_all',{confirm:$('#dac').value.trim()});$('#dad').close();await lp();if(I)li().catch(()=>{});toast(r.deleted+' product'+(r.deleted==1?'':'s')+' deleted.')}
+ catch(x){$('#dae').textContent=x.message}};
+
+$('#mt').onclick=async()=>{const r=$('#mtr'),f=$('#sf');r.style.color='';r.textContent='Sending…';
+ try{await api('a_settings_save',Object.fromEntries(new FormData(f)));f.elements.SMTP_PASS.value='';const j=await api('a_mail_test',{});r.textContent='Sent to '+j.to+'. Check the inbox and the spam folder.';r.style.color='#1a7f37'}
+ catch(x){r.textContent=x.message;r.style.color='#de1c24'}};
+init();
+</script>
+<script src="expenses.js?v=1"></script><script src="sales.js?v=1"></script><script src="chat.js?v=10"></script><script src="leave.js?v=1"></script><script src="invoices.js"></script><script src="quotes.js?v=2"></script><script src="website.js?v=1"></script><script src="theme.js?v=1791877390"></script><script src="auth.js?v=2"></script><script src="photo.js?v=3"></script><script src="notify.js?v=5"></script></body></html>

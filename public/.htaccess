@@ -1,0 +1,35 @@
+# Security rules for the public folder (Apache; needs mod_rewrite and mod_headers, on by default in XAMPP).
+Options -Indexes
+DirectoryIndex index.html
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# Live server: send plain HTTP to HTTPS. localhost is left alone so XAMPP testing keeps working.
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$ [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Clean addresses: /worker and /admin open worker.html and admin.html (only these two exact paths are affected).
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(worker|admin)/?$ $1.html [L]
+</IfModule>
+# Only these PHP entry points may be opened; every other PHP file, dotfile or backup stays hidden.
+<FilesMatch "\.php$">
+Require all denied
+</FilesMatch>
+<FilesMatch "^(api|invoice|quote|check)\.php$">
+Require all granted
+</FilesMatch>
+<FilesMatch "^\.|\.(sql|md|ini|log|bak|sh|bat|inc|env)$">
+Require all denied
+</FilesMatch>
+<IfModule mod_headers.c>
+# scripts, styles and pages are re-checked on every load, so an update shows up at once
+<FilesMatch "\.(js|css|html)$">
+Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
+</IfModule>

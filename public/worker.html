@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="img/favicon.png?v=3"><link rel="shortcut icon" href="favicon.ico?v=3"><link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=3"><script>/* show /worker and /admin instead of worker.html and admin.html; changes nothing if the clean address does not work */(function(){try{var p=location.pathname;if(!/\/(worker|admin)\.html$/.test(p))return;var c=p.replace(/\.html$/,'');fetch(c,{method:'HEAD',cache:'no-store',credentials:'same-origin'}).then(function(r){var t=r.headers.get('content-type')||'';if(r.ok&&!r.redirected&&/html/.test(t))history.replaceState(null,'',c+location.search+location.hash)}).catch(function(){})}catch(e){}})();</script><title>Worker</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme.css?v=1791880002"><link rel="stylesheet" href="modules.css?v=10"><link rel="stylesheet" href="notify.css?v=4"><link rel="stylesheet" href="auth.css?v=2">
+<style>label{display:block;margin:8px 0;font-weight:600}input,select{display:block;width:100%;padding:10px 12px;margin-top:4px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}#gate form,#chg form{max-width:360px}.hdr{display:flex;align-items:center;gap:8px;font-size:13px}.hdr b{font-weight:800}#toast{z-index:90}.logo{max-width:420px}
+.oc{border:1px solid var(--bd);border-radius:12px;background:var(--cd);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.oc.mine{border-color:var(--bl);box-shadow:inset 4px 0 0 var(--bl)}.oc.new{border-color:var(--ye);box-shadow:inset 4px 0 0 var(--ye)}
+.oc h3{margin:0 0 4px;font-size:16px}.oc .ft{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.oc select{display:inline-block;width:auto;margin:0}
+#vrep,[data-yd]{display:none!important}.oc small{color:var(--mu)}@media(max-width:699px){.oc{grid-template-columns:1fr}}</style><script src="splash.js"></script></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sp" viewBox="0 0 32 32"><path d="M16 2 4 6v9c0 7 5 12 12 15 7-3 12-8 12-15V6z" fill="#ffb81c"/><path d="m11 16 4 4 7-8" stroke="#12385f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
+<header><div class="hr"><a class="logo" href="./"><img class="sp" src="img/logo-mark.png" alt=""><span id="bn">Worker</span></a><span class="sg"></span><span class="clk" id="clk" aria-label="Current date and time"></span><span class="hdr"><button class="hi" id="hbell" title="Orders" aria-label="Orders" hidden><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="bdg" id="bb" hidden></span></button><a class="stb" id="stb" href="./" hidden title="Go to the store" aria-label="Go to the store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 20v-6h4v6"/></svg><span>Store</span></a><button class="hi" id="tg" title="Light / dark" aria-label="Toggle theme"></button><span class="vr"></span><span class="uc" id="who"></span><button class="hi" id="pwb" title="Change password" aria-label="Change password" hidden><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l3 3"/></svg></button><button class="hi" id="lgo" title="Sign out" aria-label="Sign out" hidden><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button></span><a class="bk" href="./">← Store</a></div></header>
+<main class="wrap">
+<section id="gate"><div class="gpl"><h2 id="lph">Hello, Welcome</h2><p id="lpp">Don't have an account?</p><button type="button" class="gb" id="lpb">Register</button></div><div class="gpr"><h3 id="rph">Login</h3><img class="gl" src="img/logo.png" alt=""><h2>Worker area</h2><p class="hint">For store workers only. The store admin must add your email first. Then sign up here and choose your own password.</p>
+<div class="tabs"><button class="chip on" data-g="in">Sign in</button><button class="chip" data-g="up">Sign up</button></div>
+<form id="sf2" hidden><label>Email (the one the admin added)<input id="se" placeholder="Email (the one the admin added)" type="email" required autocomplete="username"></label><label>Choose a password (8+ characters)<input id="sp2" placeholder="Choose a password (8+ characters)" type="password" minlength="8" required autocomplete="new-password"></label><p id="se2" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n">Sign up</button><div class="dpw"><span class="dpv" aria-hidden="true"></span><label>Profile photo (optional)<input type="file" id="sph" accept="image/jpeg,image/png,image/webp,image/gif"></label></div></form>
+<form id="lf"><label>Email<input id="em" placeholder="Email" type="email" required autocomplete="username"></label><label>Password<input id="pw" placeholder="Password" type="password" required autocomplete="current-password"></label><p id="ae" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n">Sign in</button></form></div></section>
+<section id="chg" hidden><h2>Choose your own password</h2><p class="hint">You signed in with a temporary password. Set a new one to continue.</p>
+<form id="cf0"><label>Temporary password<input name="current" type="password" required autocomplete="current-password"></label><label>New password (8+ characters)<input name="new" type="password" minlength="8" required autocomplete="new-password"></label><p id="ce0" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n">Save and continue</button></form></section>
+<section id="app" hidden>
+<div class="tabs"><button class="chip on" data-t="o">Orders <span class="nbd" id="ob" hidden></span></button><button class="chip" data-t="s">Stock <span class="nbd" id="sb" hidden></span></button><button class="chip" data-t="v">Invoices</button></div>
+<div id="oo"><div class="tl"><span class="chips2" id="of"></span></div><div id="ol"></div></div>
+<div id="ss" hidden><div class="al" id="la" hidden></div><div id="rs" hidden></div>
+<div class="tl"><label class="sr" for="is">Search stock</label><input id="is" type="search" placeholder="Search item, SKU or department"><span class="chips2" id="if"></span></div>
+<div class="ow"><table class="tb" id="it"></table></div>
+<h3 class="h3" id="mh">Recent stock activity</h3><div class="ow"><table class="tb" id="mt"></table></div></div>
+<div id="vv" hidden>
+<div class="kp" id="vk"></div>
+<div class="tl"><label class="sr" for="vq">Search invoices</label><input id="vq" type="search" placeholder="Search invoice number or customer"><span class="chips2" id="vc"></span><button class="btn n" id="vn">+ New invoice</button></div>
+<div class="ow"><table class="tb" id="vt"></table></div>
+<div hidden><table id="vr"></table></div>
+</div>
+</section></main>
+<dialog id="kd"><form id="kf"><h2 id="kt">Update stock</h2><p id="ki"></p><input type="hidden" name="product_id">
+<label>What happened?<select name="kind"><option value="restock">Restock: received new stock (+)</option><option value="walkin">Sold in store (−)</option><option value="damaged">Damaged, lost or expired (−)</option><option value="adjust">Stock count: set exact amount</option></select></label>
+<label><span id="kl">Quantity</span><input name="qty" type="number" min="1" step="1" required></label><p id="kp2" class="pv"></p>
+<label>Note (optional)<input name="note" maxlength="200" placeholder="Supplier, reason…"></label>
+<p id="ke" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Save</button><button type="button" class="lk" id="kx">Cancel</button></form></dialog>
+<dialog id="cp"><form id="cf"><h2>Change your password</h2><label>Current password<input name="current" type="password" required autocomplete="current-password"></label><label>New password (8+ characters)<input name="new" type="password" minlength="8" required autocomplete="new-password"></label>
+<p id="cpe" role="alert" style="color:#de1c24;font-weight:600"></p><button class="btn n w">Change password</button><button type="button" class="lk" id="cpx">Cancel</button></form></dialog>
+<dialog id="vd" class="wide"><form id="vf"><h2 id="vdt">New invoice</h2><input type="hidden" name="id">
+<div class="g2"><label>Customer name<input name="customer_name" required maxlength="120"></label><label>Email (optional)<input name="customer_email" type="email" maxlength="120"></label>
+<label>Phone (optional)<input name="customer_phone" maxlength="40"></label><label>Address (optional)<input name="customer_address" maxlength="300"></label>
+<label>Issue date<input name="issue_date" type="date" required></label><label>Due date<input name="due_date" type="date" required></label></div>
+<h3 class="h3">Items</h3>
+<div class="ow"><table class="tb" id="vi"></table></div>
+<div class="vrow"><select id="vp" aria-label="Add a product from your store"></select><button type="button" class="xs" id="vl">+ Add custom line</button></div>
+<div class="g2"><label>Discount (amount)<input name="discount" type="number" step="0.01" min="0" value="0"></label><label><span id="vtn">Tax</span> %<input name="tax_rate" type="number" step="0.01" min="0" max="100" value="0"></label></div>
+<label>Notes shown on the invoice (optional)<textarea name="notes" rows="2" maxlength="1000"></textarea></label>
+<p class="vt" id="vtot"></p>
+<fieldset id="vrep" class="rp"><label class="ck"><input type="checkbox" id="vrc"> Repeat this invoice automatically</label>
+<label id="vrf" hidden>Repeat every<select name="frequency"><option value="weekly">Week</option><option value="monthly" selected>Month</option><option value="quarterly">Quarter (3 months)</option><option value="yearly">Year</option></select></label></fieldset>
+<p id="ve" role="alert" style="color:#de1c24"></p>
+<div class="vb"><button class="btn" id="vs0" data-send="0">Save draft</button><button class="btn n" id="vs1" data-send="1">Save &amp; mark as sent</button><button type="button" class="lk" id="vx">Cancel</button></div></form></dialog>
+<dialog id="yd"><form id="yf"><h2 id="yt">Record payment</h2><p id="yi"></p><input type="hidden" name="id">
+<label>Amount received<input name="amount" type="number" step="0.01" min="0.01" required></label>
+<label>Method<select name="method" id="ym"></select></label>
+<label>Date received<input name="paid_on" type="date" required></label>
+<label>Note (optional)<input name="note" maxlength="200" placeholder="Reference, receipt no.…"></label>
+<div id="yh"></div>
+<p id="ye" role="alert" style="color:#de1c24"></p><button class="btn n w">Save payment</button><button type="button" class="lk" id="yx">Close</button></form></dialog>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s),e=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let P=[],S={name:'Store',currency:'$'},ME=null,O=[],OF='mine',LAST=null,I=null,IF='all',IQ='';
+const m=n=>S.currency+Number(n).toFixed(2),WOPEN=['pending','confirmed','dispatched'];
+const LB={out:'Out of stock',low:'Low stock',ok:'In stock'},bdg=s=>s=='ok'?'<span class="bd ok">In stock</span>':`<span class="bd ${s}">${LB[s]}</span>`;
+const KD={restock:'Restock',walkin:'Sold in store',damaged:'Damaged / lost',adjust:'Stock count',sale:'Online sale',return:'Order cancelled',opening:'Opening stock'};
+const NEXT={pending:'confirmed',confirmed:'dispatched',dispatched:'delivered'};
+async function api(a,b,x=''){
+ const r=await fetch('api.php?action='+a+x,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{});
+ const j=await r.json().catch(()=>({error:'Unexpected response from the server.'}));
+ if(r.status==401||(j&&j.must_change)){if(j.must_change)show('chg');else if(ME){location.reload()}}
+ if(!r.ok)throw new Error(j.error||'Request failed.');return j}
+function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>x.classList.remove('on'),4500)}
+function show(w){$('#gate').hidden=w!='gate';$('#chg').hidden=w!='chg';$('#app').hidden=w!='app';$('#pwb').hidden=$('#lgo').hidden=$('#hbell').hidden=$('#stb').hidden=!ME;$('#who').innerHTML=ME?whoHtml(ME):''}
+// ---- orders ----
+const OFL=[['mine','My orders'],['new','New'],['open','All open'],['delivered','Delivered'],['all','All']];
+async function lo(){O=await api('a_orders');if(O.length)LAST=Math.max(LAST||0,...O.map(o=>o.id));do2()}
+function do2(){
+ const mine=o=>o.assigned_to==ME.id&&WOPEN.includes(o.status),nw=o=>!o.assigned_to&&WOPEN.includes(o.status);
+ const nm=O.filter(mine).length,nn=O.filter(nw).length;$('#ob').hidden=!nn;$('#ob').textContent=nn;
+ $('#of').innerHTML=OFL.map(([k,l])=>`<button class="chip${OF==k?' on':''}" data-of="${k}">${l}${k=='mine'?' ('+nm+')':k=='new'&&nn?' ('+nn+')':''}</button>`).join('');
+ const L=O.filter(o=>OF=='all'||(OF=='mine'?mine(o):OF=='new'?nw(o):OF=='open'?WOPEN.includes(o.status):o.status=='delivered'));
+ $('#ol').innerHTML=L.map(o=>{
+  const my=o.assigned_to==ME.id,free=!o.assigned_to,done=o.status=='delivered'||o.status=='cancelled';
+  return `<article class="oc${my?' mine':''}${free&&!done?' new':''}"><div><h3>Order #${o.id} · ${m(o.total)}</h3><small>${e(o.at)} · ${e(o.payment)}</small>${o.status=='cancelled'?'':` <span class="bd ${o.paid?'ok':'low'}">${o.paid?'Paid':'Awaiting payment'}</span>${o.paid&&o.mpesa_receipt?` <small>M-Pesa ${e(o.mpesa_receipt)}</small>`:''}`}<br>${o.items.map(i=>`${i.qty} × ${e(i.name)}`).join('<br>')}</div>
+  <div><b>${e(o.name)}</b><br><a href="tel:${e(o.phone.replace(/[^+\d]/g,''))}">${e(o.phone)}</a><br>${e(o.address)}${o.note?`<br><i>${e(o.note)}</i>`:''}</div>
+  <div class="ft"><span>${free?'<b>Nobody has this order yet</b>':my?'<b>Yours</b>':'Handled by '+e(o.assigned_name||'another worker')}</span>
+  ${free&&!done?`<button class="btn n" data-take="${o.id}">Take this order</button>`:''}${my&&!done?`<button class="xs" data-give="${o.id}">Give back</button>`:''}
+  <select data-st="${o.id}" aria-label="Status of order ${o.id}" ${!free&&!my?'disabled':''}>${['pending','confirmed','dispatched','delivered','cancelled'].map(s=>`<option${s==o.status?' selected':''}>${s}</option>`).join('')}</select>
+  ${(my||free)&&o.status=='confirmed'&&!o.paid?`<button class="btn n" data-pay="${o.id}" data-pv="1">Confirm payment</button>`:''}${my&&o.status=='confirmed'&&o.paid?`<button class="xs" data-pay="${o.id}" data-pv="0">Mark unpaid</button>`:''}
+  ${my&&NEXT[o.status]&&!(o.status=='confirmed'&&!o.paid)?`<button class="xs" data-next="${o.id}" data-to="${NEXT[o.status]}">Mark ${NEXT[o.status]}</button>`:''}${my&&o.status=='confirmed'&&!o.paid?'<small>Confirm the till payment before dispatching.</small>':''}
+  ${o.updated_at?`<small>Updated ${e(o.updated_at)}${o.updated_by_name?' by '+e(o.updated_by_name):''}</small>`:''}</div></article>`}).join('')||'<p>Nothing here right now.</p>'}
+async function poll(){
+ if(!ME||$('#app').hidden||document.hidden)return;
+ try{const c=await api('a_counts');
+  if(c.currency!==undefined&&(c.currency!==S.currency||c.site_name!==S.name)){S.currency=c.currency;S.name=c.site_name;$('#bn').textContent=S.name+' staff';document.title=S.name+' staff';await lo();li().catch(()=>{})}
+  if(LAST!==null&&c.last_order>LAST){toast('New order received (#'+c.last_order+')');await lo()}
+  $('#sb').hidden=!c.low;$('#sb').textContent=c.low}catch(x){}}
+setInterval(poll,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+// ---- stock ----
+async function li(){const[d,M]=await Promise.all([api('a_inventory'),api('a_movements')]);I=d;P=d.items;di();$('#mh').textContent='Recent stock activity';mt(M)}
+function mt(M){$('#mt').innerHTML='<tr><th>When</th><th>Item</th><th>What</th><th>Change</th><th>Now</th><th>Note</th></tr>'+(M.map(x=>`<tr><td>${e(x.at)}</td><td>${e(x.name)}</td><td>${KD[x.kind]||e(x.kind)}</td><td><b class="${x.qty_change>0?'up':'dn'}">${x.qty_change>0?'+':''}${x.qty_change}</b></td><td>${x.qty_after}</td><td>${e(x.note)}</td></tr>`).join('')||'<tr><td colspan="6">No stock activity yet.</td></tr>')}
+
+function rs(){
+ const R=I.restock||[];$('#rs').hidden=!R.length;if(!R.length)return;
+ $('#rs').innerHTML='<h3 class="h3">What to stock now</h3><p class="hint">Worked out from your real sales over the last 30 days. Order size covers about 30 days of sales plus your safety level.</p><div class="ow"><table class="tb"><tr><th>Item</th><th>In stock</th><th>Sold (30d)</th><th>Days left</th><th>Order about</th><th>Why</th></tr>'+R.map(p=>`<tr><td>${p.emoji} ${e(p.name)}</td><td><b class="s-${p.status}">${p.stock}</b></td><td>${p.sold30}</td><td>${p.days_left==null?'–':p.days_left}</td><td><b>${p.suggest}</b></td><td><span class="bd ${p.status=='ok'?'low':p.status}">${e(p.why)}</span></td></tr>`).join('')+'</table></div>'}
+function di(){
+ if(!I)return;const t=I.totals,n=t.low+t.out+t.soon;rs();$('#sb').hidden=!n;$('#sb').textContent=n;
+ $('#la').hidden=!n;$('#la').textContent=n?`${n} item${n>1?'s need':' needs'} restocking: ${t.out} out of stock, ${t.low} running low`+(t.soon?`, ${t.soon} selling fast.`:'.'):'';
+ $('#if').innerHTML=[['all','All'],['need','Needs restock'],['low','Low'],['out','Out']].map(([k,l])=>`<button class="chip${IF==k?' on':''}" data-f="${k}">${l}</button>`).join('');
+ const q=IQ.toLowerCase(),L=I.items.filter(p=>(IF=='all'||(IF=='need'?p.need:p.status==IF))&&(!q||(p.name+' '+p.sku+' '+p.dept).toLowerCase().includes(q)));
+ $('#it').innerHTML='<tr><th>Item</th><th>Price</th><th>In stock</th><th>Status</th><th></th></tr>'+(L.map(p=>`<tr><td>${p.emoji} ${e(p.name)}<br><small>${e(p.dept)}${p.sku?' · '+e(p.sku):''}</small></td><td>${m(p.price)}</td><td><b class="s-${p.status}">${p.stock}</b><br><small>reorder at ${p.reorder_level}</small></td><td>${bdg(p.status)}</td><td class="ac"><button class="xs" data-k="restock" data-pid="${p.id}">+ Restock</button> <button class="xs" data-k="walkin" data-pid="${p.id}">Sell</button> <button class="xs" data-k="adjust" data-pid="${p.id}">Count</button> <button class="xs" data-h="${p.id}">History</button></td></tr>`).join('')||'<tr><td colspan="5">Nothing matches.</td></tr>')}
+function kdlg(id,k){
+ const p=I.items.find(x=>x.id==id),f=$('#kf');f.reset();$('#ke').textContent='';
+ f.elements.product_id.value=id;f.elements.kind.value=k;f.dataset.cur=p.stock;
+ $('#kt').textContent=p.emoji+' '+p.name;$('#ki').textContent='Currently '+p.stock+' in stock.';kupd();$('#kd').showModal();f.elements.qty.focus()}
+function kupd(){
+ const f=$('#kf'),k=f.elements.kind.value,n=parseInt(f.elements.qty.value,10),c=+f.dataset.cur;
+ f.elements.qty.min=k=='adjust'?0:1;$('#kl').textContent=k=='adjust'?'Counted quantity on the shelf':'Quantity';
+ $('#kp2').textContent=isNaN(n)?'':'Stock will go from '+c+' to '+(k=='restock'?c+n:k=='adjust'?n:c-n)+'.'}
+// ---- start ----
+async function init(){
+ try{
+  S=await api('site');$('#bn').textContent=S.name+' staff';document.title=S.name+' staff';
+  const r=await api('me');ME=r.user;
+  if(!ME){show('gate');return}
+  if(ME.role!='worker'){show('gate');$('#ae').textContent='You are signed in as '+(ME.role=='admin'?'an admin. Admins use admin.html':'a customer')+'. Sign out to use a worker account.';return}
+  if(ME.must_change){show('chg');return}
+  show('app');await lo();li().catch(()=>{});poll()
+ }catch(x){$('#ae').textContent=x.message}
+}
+document.addEventListener('click',async ev=>{
+ const t=ev.target.closest('button');if(!t)return;const d=t.dataset;
+ try{
+  if(t.id=='lgo'){try{await api('logout',{})}catch(x){}location.reload();return}
+  if(t.id=='pwb'){$('#cf').reset();$('#cpe').textContent='';$('#cp').showModal();return}
+  if(t.id=='cpx'){$('#cp').close();return}
+  if(t.id=='kx'){$('#kd').close();return}
+  if(d.t){$('#oo').hidden=d.t!='o';$('#ss').hidden=d.t!='s';$('#vv').hidden=d.t!='v';document.querySelectorAll('.tabs .chip[data-t]').forEach(c=>c.classList.toggle('on',c==t));if(d.t=='o')await lo();else if(d.t=='v'){await li();await lv()}else await li();return}
+  if(d.of){OF=d.of;do2();return}
+  if(d.f){IF=d.f;di();return}
+  if(d.take){await api('a_assign',{id:+d.take,worker_id:ME.id});toast('Order #'+d.take+' is yours.');await lo();return}
+  if(d.give){await api('a_assign',{id:+d.give,worker_id:0});await lo();return}
+  if(d.pay){await api('a_paid',{id:+d.pay,paid:d.pv=='1'});toast(d.pv=='1'?'Payment confirmed. You can dispatch now.':'Marked unpaid.');await lo();return}
+  if(d.next){await api('a_status',{id:+d.next,status:d.to});await lo();return}
+  if(d.k){kdlg(d.pid,d.k);return}
+  if(d.h){const M=await api('a_movements',null,'&product_id='+d.h);$('#mh').textContent='Stock activity: '+(I.items.find(x=>x.id==d.h)||{}).name;mt(M);$('#mh').scrollIntoView();return}
+ }catch(x){alert(x.message);lo().catch(()=>{})}
+});
+document.addEventListener('change',async ev=>{
+ if(ev.target.closest('#kf')){kupd();return}
+ const s=ev.target.dataset.st;if(!s)return;
+ if(ev.target.value=='cancelled'&&!confirm('Cancel order #'+s+'? The items go back into stock.')){lo();return}
+ try{await api('a_status',{id:+s,status:ev.target.value});await lo();if(I)li().catch(()=>{})}catch(x){alert(x.message);lo()}});
+$('#kf').addEventListener('input',kupd);
+$('#is').addEventListener('input',ev=>{IQ=ev.target.value;di()});
+$('#kf').onsubmit=async ev=>{ev.preventDefault();$('#ke').textContent='';try{await api('a_stock',Object.fromEntries(new FormData(ev.target)));$('#kd').close();await li()}catch(x){$('#ke').textContent=x.message}};
+document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{const up=b.dataset.g=='up';$('#lf').hidden=up;$('#sf2').hidden=!up;document.querySelectorAll('[data-g]').forEach(c=>c.classList.toggle('on',c==b))});
+$('#sf2').onsubmit=async ev=>{ev.preventDefault();$('#se2').textContent='';try{await api('worker_signup',{email:$('#se').value,password:$('#sp2').value,remember:!!(ev.target.elements.remember&&ev.target.elements.remember.checked)});await dpAfterSignup('#sph');$('#sp2').value='';init()}catch(x){$('#se2').textContent=x.message}};
+$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#ae').textContent='';try{await api('staff_login',{portal:'worker',email:$('#em').value,password:$('#pw').value,remember:!!(ev.target.elements.remember&&ev.target.elements.remember.checked)});$('#pw').value='';init()}catch(x){$('#ae').textContent=x.message}};
+$('#cf0').onsubmit=async ev=>{ev.preventDefault();$('#ce0').textContent='';try{await api('change_password',Object.fromEntries(new FormData(ev.target)));init()}catch(x){$('#ce0').textContent=x.message}};
+$('#cf').onsubmit=async ev=>{ev.preventDefault();$('#cpe').textContent='';try{await api('change_password',Object.fromEntries(new FormData(ev.target)));$('#cp').close();toast('Password changed.')}catch(x){$('#cpe').textContent=x.message}};
+init();
+</script><script src="invoices.js"></script><script src="sales.js?v=1"></script><script src="chat.js?v=10"></script><script src="quotes.js?v=2"></script><script src="leave.js?v=1"></script><script src="theme.js?v=1791877390"></script><script src="auth.js?v=2"></script><script src="photo.js?v=3"></script><script src="notify.js?v=5"></script></body></html>
